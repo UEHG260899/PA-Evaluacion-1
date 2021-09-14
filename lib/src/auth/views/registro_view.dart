@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+import 'package:evaluacion_1/src/vendedor/views/drawer_vendedor.dart';
 import 'package:evaluacion_1/src/comprador/views/drawer_comprador.dart';
 
 class RegistroView extends StatefulWidget {
@@ -209,6 +210,8 @@ class _RegistroViewState extends State<RegistroView> {
             setState(() {
               dropDownRole = 'Seleccione un rol';
             });
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => VendedroDrawer()));
           });
         } else {
           _dbRef.child('compradores').push().set({
