@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -36,6 +37,10 @@ class _CrearServicioState extends State<CrearServicio> {
   TextEditingController? precioController;
   File? imageFile;
 
+  //Instancias de Firebase
+  final DatabaseReference _serviciosRef = FirebaseDatabase.instance.reference().child('servicios');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -46,8 +51,6 @@ class _CrearServicioState extends State<CrearServicio> {
     precioController = new TextEditingController();
     this.localizacion();
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +106,9 @@ class _CrearServicioState extends State<CrearServicio> {
                     ),
                     height: 200.0,
                   ),
-                  SizedBox(height: 26.0,),
+                  SizedBox(
+                    height: 26.0,
+                  ),
                   btnCrear(),
                 ]),
           ),
@@ -170,7 +175,7 @@ class _CrearServicioState extends State<CrearServicio> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {},
+        onPressed: () => registrar(),
         child: Text("Crear Servicio",
             textAlign: TextAlign.center,
             style: style.copyWith(
@@ -180,12 +185,6 @@ class _CrearServicioState extends State<CrearServicio> {
   }
 
   Widget mapaView() {
-    _location.getLocation().then((value) {
-      _locationData = value;
-      lat = _locationData.latitude.toString();
-      long = _locationData.longitude.toString();
-    });
-
     return GoogleMap(
       initialCameraPosition: CameraPosition(
         target: LatLng(0, 0),
@@ -196,23 +195,25 @@ class _CrearServicioState extends State<CrearServicio> {
     );
   }
 
-  Widget imagecard(File? imageFile){
+  Widget imagecard(File? imageFile) {
     return GestureDetector(
       onTap: () => showAlert(),
-      child: (imageFile != null) ? Card(
-        child: Container(
-          height: 150.0,
-          child: Image.file(imageFile),
-        ),
-      ) : Card(
-        child: Container(
-          height: 150.0,
-          child: Image.asset(
-            "assets/product_placeholder.png",
-             fit: BoxFit.contain,
-          ),
-        ),
-      ),
+      child: (imageFile != null)
+          ? Card(
+              child: Container(
+                height: 150.0,
+                child: Image.file(imageFile),
+              ),
+            )
+          : Card(
+              child: Container(
+                height: 150.0,
+                child: Image.asset(
+                  "assets/product_placeholder.png",
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
     );
   }
   //metodos aparte
@@ -230,7 +231,7 @@ class _CrearServicioState extends State<CrearServicio> {
     animarCamara(position!.latitude, position!.longitude);
   }
 
-  void showAlert(){
+  void showAlert() {
     Widget galleryButton = ElevatedButton(
       onPressed: () => seleccionarImagen(ImageSource.gallery),
       child: Text('Galeria'),
@@ -245,21 +246,65 @@ class _CrearServicioState extends State<CrearServicio> {
       actions: [cameraButton, galleryButton],
     );
 
-    showDialog(context: context, builder: (BuildContext context) {
-      return alerta;
-    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alerta;
+        });
   }
 
-  Future seleccionarImagen(ImageSource imgSrc) async{
+  Future seleccionarImagen(ImageSource imgSrc) async {
     pickFile = await ImagePicker().getImage(source: imgSrc);
-    if(imgSrc != null){
+    if (imgSrc != null) {
       imageFile = File(pickFile!.path);
     }
 
     Navigator.of(context).pop();
 
-    setState(() {
-      
-    });
+    setState(() {});
+  }
+
+  int validaciones() {
+    if (nombreController!.text.isEmpty ||
+        descripController!.text.isEmpty ||
+        noContactoController!.text.isEmpty ||
+        precioController!.text.isEmpty) {
+      return 0;
+    }
+    return 1;
+  }
+
+  void customSnack(String texto) {
+    final snack = SnackBar(
+      content: Text('$texto'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snack);
+  }
+
+  registrar() async{
+    int resultado = validaciones();
+    if (resultado != 1) {
+      customSnack('No puede haber campos vacios');
+    } else {
+      _location.getLocation().then((value) {
+        _locationData = value;
+        lat = _locationData.latitude.toString();
+        long = _locationData.longitude.toString();
+
+        _serviciosRef.push().set({
+          'nombre' : nombreController!.text,
+          'descripcion' : descripController!.text,
+          'noContacto' : noContactoController!.text,
+          'latitud' : lat,
+          'longitud' : long,
+          'imgUrl' : 'www.xvideos.com',
+          'precio' : precioController!.text,
+          'correoVend' : _auth.currentUser!.email
+        }).then((value){
+          print('Si jaló');
+        });
+
+      });
+    }
   }
 }
