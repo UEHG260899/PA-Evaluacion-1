@@ -10,8 +10,26 @@ class RegistroView extends StatefulWidget {
 }
 
 class _RegistroViewState extends State<RegistroView> {
+
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
   String dropDownRole = "Seleccione un rol";
+
+  //Controllers
+  TextEditingController? emailController;
+  TextEditingController? userController;
+  TextEditingController? passController;
+  TextEditingController? confPassController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    emailController = new TextEditingController();
+    userController = new TextEditingController();
+    passController = new TextEditingController();
+    confPassController = new TextEditingController();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +65,17 @@ class _RegistroViewState extends State<RegistroView> {
                       ),
                     ),
                   ),
-                  nombreField(),
+                  userField(),
                   SizedBox(height: 26.0,),
-                  apPatField(),
+                  emailField(),
                   SizedBox(height: 26.0,),
-                  apMatField(),
+                  passField(),
+                  SizedBox(height: 26.0,),
+                  confPassField(),
                   SizedBox(height: 26.0,),
                   roleSelect(),
                   SizedBox(height: 26.0,),
-                  registroBtn(context),
+                  registroBtn(),
                 ],
               ),
             ),
@@ -65,37 +85,51 @@ class _RegistroViewState extends State<RegistroView> {
     );
   }
 
-  Widget nombreField() {
+  Widget userField(){
     return TextField(
-      obscureText: true,
-      keyboardType: TextInputType.emailAddress,
+      controller: userController,
+      keyboardType: TextInputType.text,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: 'Nombre',
+          hintText: 'Nombre de usuario',
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
   }
 
-  Widget apPatField(){
-  return TextField(
-    obscureText: true,
+  Widget emailField() {
+    return TextField(
+      controller: emailController,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: 'Apellido Paterno',
+          hintText: 'Correo Electrónico',
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    );
+  }
+
+  Widget passField(){
+  return TextField(
+    controller: passController,
+    obscureText: true,
+      keyboardType: TextInputType.text,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: 'Contraseña',
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
   );
 }
 
-  Widget apMatField(){
+  Widget confPassField(){
   return TextField(
-    obscureText: true,
-      keyboardType: TextInputType.emailAddress,
+    controller: confPassController,
+      obscureText: true,
+      keyboardType: TextInputType.text,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: 'Apellido Materno',
+          hintText: 'Confirmar contraseña',
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
   );
@@ -125,7 +159,7 @@ class _RegistroViewState extends State<RegistroView> {
     );
   }
 
-  Widget registroBtn(BuildContext context) {
+  Widget registroBtn() {
     return Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -133,14 +167,29 @@ class _RegistroViewState extends State<RegistroView> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegistroView()));
-        },
+        onPressed: () => registrar(),
         child: Text("Registro",
             textAlign: TextAlign.center,
             style: style.copyWith(
                 color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
+  }
+
+
+  //Metodos aparte
+
+  registrar(){
+    //bool result = validaciones();
+    print('Hola');
+  }
+
+  bool validaciones(){
+    if(emailController!.text.isEmpty || passController!.text.isEmpty
+        || dropDownRole == 'Seleccione un rol'){
+          return false;
+    }
+
+    return true;
   }
 }
