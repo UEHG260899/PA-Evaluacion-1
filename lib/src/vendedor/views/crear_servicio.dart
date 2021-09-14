@@ -301,7 +301,13 @@ class _CrearServicioState extends State<CrearServicio> {
           'precio' : precioController!.text,
           'correoVend' : _auth.currentUser!.email
         }).then((value){
-          print('Si jaló');
+          nombreController!.text = '';
+          precioController!.text = '';
+          descripController!.text = '';
+          noContactoController!.text = '';
+          lat = '';
+          long = '';
+          imageFile = null;
         });
 
       });
