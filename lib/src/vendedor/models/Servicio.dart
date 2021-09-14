@@ -8,9 +8,10 @@ class Servicio {
   String? latitud;
   String? longitud;
   String? imgUrl;
+  String? precio;
 
   Servicio(this.id, this.nombre, this.descripcion, this.noContacto,
-      this.latitud, this.longitud, this.imgUrl);
+      this.latitud, this.longitud, this.imgUrl, this.precio);
 
   Servicio.map(dynamic obj){
     this.id = obj['id'];
@@ -20,6 +21,7 @@ class Servicio {
     this.latitud = obj['latitud'];
     this.longitud = obj['longitud'];
     this.imgUrl = obj['imgUrl'];
+    this.precio = obj['precio'];
   }
 
   String get getId => id!;
@@ -29,6 +31,7 @@ class Servicio {
   String get getLalitud => latitud!;
   String get getLongitud => longitud!;
   String get getImgUrl => imgUrl!;
+  String get getPrecio => precio!;
 
   Servicio.fromSnapshot(DataSnapshot snapShot){
     id = snapShot.key;
@@ -38,5 +41,6 @@ class Servicio {
     latitud = snapShot.value['latitud'];
     longitud = snapShot.value['longitud'];
     imgUrl = snapShot.value['imgUrl'];
+    precio = snapShot.value['precio'];
   }
 }

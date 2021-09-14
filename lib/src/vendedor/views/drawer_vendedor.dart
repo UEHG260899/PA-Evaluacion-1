@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:evaluacion_1/src/auth/views/login_view.dart';
-
+import 'package:evaluacion_1/src/vendedor/views/crear_servicio.dart';
 
 class VendedorDrawer extends StatefulWidget {
   VendedorDrawer({Key? key}) : super(key: key);
@@ -13,6 +13,8 @@ class VendedorDrawer extends StatefulWidget {
 
 class _VendedorDrawerState extends State<VendedorDrawer> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  int _selectedItem = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,10 +39,14 @@ class _VendedorDrawerState extends State<VendedorDrawer> {
             ListTile(
               title: Text('Inicio'),
               leading: Icon(Icons.home_filled),
+              selected: (0 == _selectedItem),
+              onTap: () => onItemSelect(0),
             ),
             ListTile(
               title: Text('Crear un servicio'),
               leading: Icon(Icons.add),
+              selected: (1 == _selectedItem),
+              onTap: () => onItemSelect(1),
             ),
             ListTile(
               title: Text('Editar un servicio'),
@@ -58,13 +64,29 @@ class _VendedorDrawerState extends State<VendedorDrawer> {
           ],
         ),
       ),
+      body: getDrawerItem(_selectedItem),
     );
   }
 
+
+  //Funciones aparte
   logOut(){
     _auth.signOut();
     Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => LoginView()),
               (route) => false);
+  }
+
+  getDrawerItem(int pos){
+    switch(pos){
+      case 1: return CrearServicio();
+    }
+  }
+
+  onItemSelect(int pos){
+    setState(() {
+      _selectedItem = pos;
+    });
+    Navigator.pop(context);
   }
 }
