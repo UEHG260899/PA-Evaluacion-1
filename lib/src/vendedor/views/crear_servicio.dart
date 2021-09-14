@@ -300,7 +300,8 @@ class _CrearServicioState extends State<CrearServicio> {
           'longitud' : long,
           'imgUrl' : imageUrl,
           'precio' : precioController!.text,
-          'correoVend' : _auth.currentUser!.email
+          'correoVend' : _auth.currentUser!.email,
+          'status' : 'activo'
         }).then((value){
           nombreController!.text = '';
           precioController!.text = '';
