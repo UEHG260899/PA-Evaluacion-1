@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+import 'package:evaluacion_1/src/comprador/views/drawer_comprador.dart';
+
 class RegistroView extends StatefulWidget {
   RegistroView({Key? key}) : super(key: key);
 
@@ -220,6 +222,8 @@ class _RegistroViewState extends State<RegistroView> {
             setState(() {
               dropDownRole = 'Seleccione un rol';
             });
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => DrawerComprador()));
           });
         }
       } on FirebaseAuthException catch (e) {
