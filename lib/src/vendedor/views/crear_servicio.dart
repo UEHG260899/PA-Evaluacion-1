@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CrearServicio extends StatefulWidget {
   CrearServicio({Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class _CrearServicioState extends State<CrearServicio> {
   late LocationData _locationData;
   String? lat;
   String? long;
+  PickedFile? pickFile;
 
   Position? position;
   Completer<GoogleMapController> mapController = new Completer();
@@ -31,6 +34,7 @@ class _CrearServicioState extends State<CrearServicio> {
   TextEditingController? descripController;
   TextEditingController? noContactoController;
   TextEditingController? precioController;
+  File? imageFile;
 
   @override
   void initState() {
@@ -57,13 +61,7 @@ class _CrearServicioState extends State<CrearServicio> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(
-                    height: 150,
-                    child: Image.asset(
-                      "assets/product_placeholder.png",
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                  imagecard(imageFile),
                   SizedBox(
                     height: 26.0,
                   ),
@@ -186,8 +184,6 @@ class _CrearServicioState extends State<CrearServicio> {
       _locationData = value;
       lat = _locationData.latitude.toString();
       long = _locationData.longitude.toString();
-      print(long);
-      print(lat);
     });
 
     return GoogleMap(
@@ -200,6 +196,27 @@ class _CrearServicioState extends State<CrearServicio> {
     );
   }
 
+  Widget imagecard(File? imageFile){
+    return GestureDetector(
+      onTap: () => showAlert(),
+      child: (imageFile != null) ? Card(
+        child: Container(
+          height: 150.0,
+          child: Image.file(imageFile),
+        ),
+      ) : Card(
+        child: Container(
+          height: 150.0,
+          child: Image.asset(
+            "assets/product_placeholder.png",
+             fit: BoxFit.contain,
+          ),
+        ),
+      ),
+    );
+  }
+  //metodos aparte
+
   Future animarCamara(double lat, double long) async {
     GoogleMapController controller = await mapController.future;
     if (controller != null) {
@@ -211,5 +228,38 @@ class _CrearServicioState extends State<CrearServicio> {
   localizacion() async {
     position = await Geolocator.getCurrentPosition();
     animarCamara(position!.latitude, position!.longitude);
+  }
+
+  void showAlert(){
+    Widget galleryButton = ElevatedButton(
+      onPressed: () => seleccionarImagen(ImageSource.gallery),
+      child: Text('Galeria'),
+    );
+    Widget cameraButton = ElevatedButton(
+      onPressed: () => seleccionarImagen(ImageSource.camera),
+      child: Text('Camara'),
+    );
+
+    AlertDialog alerta = AlertDialog(
+      title: Text('Seleccione una opcion'),
+      actions: [cameraButton, galleryButton],
+    );
+
+    showDialog(context: context, builder: (BuildContext context) {
+      return alerta;
+    });
+  }
+
+  Future seleccionarImagen(ImageSource imgSrc) async{
+    pickFile = await ImagePicker().getImage(source: imgSrc);
+    if(imgSrc != null){
+      imageFile = File(pickFile!.path);
+    }
+
+    Navigator.of(context).pop();
+
+    setState(() {
+      
+    });
   }
 }
