@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-
-class VendedroDrawer extends StatefulWidget {
-  VendedroDrawer({Key? key}) : super(key: key);
+import 'package:firebase_auth/firebase_auth.dart';
+class VendedorDrawer extends StatefulWidget {
+  VendedorDrawer({Key? key}) : super(key: key);
 
   @override
-  _VendedroDrawerState createState() => _VendedroDrawerState();
+  _VendedorDrawerState createState() => _VendedorDrawerState();
 }
 
-class _VendedroDrawerState extends State<VendedroDrawer> {
+class _VendedorDrawerState extends State<VendedorDrawer> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,17 +19,20 @@ class _VendedroDrawerState extends State<VendedroDrawer> {
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
-                accountName: Text('Uriel E.'), 
+                accountName: Text('${_auth.currentUser!.displayName}'), 
                 accountEmail: Text('ejemplo@gmail.com')
             ),
             ListTile(
-              title: Text('Hola'),
+              title: Text('Hola Vendedor'),
             ),
             ListTile(
               title: Text('Hola2'),
             )
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _auth.signOut(),
       ),
     );
   }

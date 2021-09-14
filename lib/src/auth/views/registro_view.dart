@@ -199,6 +199,7 @@ class _RegistroViewState extends State<RegistroView> {
         _auth.createUserWithEmailAndPassword(
             email: emailController!.text, password: passController!.text);
         if (dropDownRole == 'Vendedor') {
+          await _auth.currentUser!.updateDisplayName(userController!.text);
           _dbRef.child('vendedores').push().set({
             'user': userController!.text,
             'email': emailController!.text
@@ -211,7 +212,7 @@ class _RegistroViewState extends State<RegistroView> {
               dropDownRole = 'Seleccione un rol';
             });
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => VendedroDrawer()));
+                MaterialPageRoute(builder: (context) => VendedorDrawer()));
           });
         } else {
           _dbRef.child('compradores').push().set({

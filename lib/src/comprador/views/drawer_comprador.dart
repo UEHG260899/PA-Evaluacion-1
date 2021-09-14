@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DrawerComprador extends StatefulWidget {
   DrawerComprador({Key? key}) : super(key: key);
@@ -8,6 +9,9 @@ class DrawerComprador extends StatefulWidget {
 }
 
 class _DrawerCompradorState extends State<DrawerComprador> {
+  
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +33,9 @@ class _DrawerCompradorState extends State<DrawerComprador> {
             )
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _auth.signOut(),
       ),
     );
   }
