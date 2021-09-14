@@ -286,18 +286,19 @@ class _CrearServicioState extends State<CrearServicio> {
     if (resultado != 1) {
       customSnack('No puede haber campos vacios');
     } else {
+      TaskSnapshot snapshot = await subirArchivo(pickFile!);
+      String imageUrl = await snapshot.ref.getDownloadURL();
       _location.getLocation().then((value) {
         _locationData = value;
         lat = _locationData.latitude.toString();
         long = _locationData.longitude.toString();
-
         _serviciosRef.push().set({
           'nombre' : nombreController!.text,
           'descripcion' : descripController!.text,
           'noContacto' : noContactoController!.text,
           'latitud' : lat,
           'longitud' : long,
-          'imgUrl' : 'www.xvideos.com',
+          'imgUrl' : imageUrl,
           'precio' : precioController!.text,
           'correoVend' : _auth.currentUser!.email
         }).then((value){
@@ -312,5 +313,19 @@ class _CrearServicioState extends State<CrearServicio> {
 
       });
     }
+  }
+
+  Future<TaskSnapshot> subirArchivo(PickedFile file) async {
+    String nombre = '${UniqueKey().toString()}.jpg';
+
+    Reference ref = FirebaseStorage.instance.ref().child('servicios').child('/$nombre');
+
+    final metadata = SettableMetadata(
+      contentType: 'image/jpeg',
+      customMetadata: {'picked-file-path':file.path}
+    );
+
+    UploadTask uploadTask = ref.putFile(File(file.path), metadata);
+    return uploadTask;
   }
 }
