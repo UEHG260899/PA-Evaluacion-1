@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:evaluacion_1/src/vendedor/models/Servicio.dart';
 
@@ -16,12 +14,12 @@ class ListadoActivos extends StatefulWidget {
 
 class _ListadoActivosState extends State<ListadoActivos> {
   List<Servicio>? servicios;
-  StreamSubscription<Event>? addAlumnos;
+  StreamSubscription<Event>? addServicio;  
 
 
   //Instancias Firebase
-  final  String? email = FirebaseAuth.instance.currentUser!.email;
   final  _serviciosRef = FirebaseDatabase.instance.reference().child('servicios').orderByChild('status').equalTo('activo');
+  final _dbRef = FirebaseDatabase.instance.reference().child('servicios');
   
 
 
@@ -31,7 +29,14 @@ class _ListadoActivosState extends State<ListadoActivos> {
     super.initState();
     servicios = [];
 
-    addAlumnos = _serviciosRef.onChildAdded.listen(_addServicio);
+    addServicio = _serviciosRef.onChildAdded.listen(_addServicio);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    addServicio!.cancel();
   }
 
   @override
@@ -50,18 +55,21 @@ class _ListadoActivosState extends State<ListadoActivos> {
                      SizedBox(
                        height: 150.0,
                        width: 100.0,
-                       child: Image.asset(
-                         "assets/login.png",
-                         fit: BoxFit.contain,
-                       ),
+                       child: FadeInImage(
+                         image: NetworkImage("${servicios![position].imgUrl}"),
+                         placeholder: AssetImage("assets/loading.png"),
+                       )
                      ),
+                     SizedBox(width: 10.0,),
                      Column(
                        children: [
                          Text('${servicios?[position].nombre}'),
                          Text('\$${servicios?[position].precio}'),
                        ],
                      ),
-                     TextButton(onPressed: (){}, child: Text('Hola'))
+                     SizedBox(width: 10.0,),
+                     TextButton(onPressed: () => _borrarServicio(servicios![position], position), child: Text('Eliminar', style: TextStyle(color: Colors.red),),),
+                     TextButton(onPressed: () => _desactivarServicio(servicios![position]), child: Text('Baja lógica', style: TextStyle(color: Colors.orange),)),
                    ],
                  ),
                )
@@ -77,4 +85,34 @@ class _ListadoActivosState extends State<ListadoActivos> {
       servicios!.add(new Servicio.fromSnapshot(evento.snapshot));
     });
   }
+
+
+
+  _borrarServicio(Servicio servicio, int pos) async{
+    await _dbRef.child(servicio.id!).remove().then((value){
+      setState(() {
+        servicios!.removeAt(pos);
+      });
+    });
+  }
+  
+  _desactivarServicio(Servicio servicio){
+    _dbRef.child(servicio.id!).set({
+      'nombre' : servicio.nombre,
+      'latitud' : servicio.latitud,
+      'longitud' : servicio.longitud,
+      'correoVend' : servicio.correoVend,
+      'imgUrl' : servicio.imgUrl,
+      'noContacto' : servicio.noContacto,
+      'precio' : servicio.precio,
+      'descripcion' : servicio.descripcion,
+      'status' : 'inactivo'
+    }).then((value){
+      setState(() {
+        servicios!.removeAt(servicios!.indexOf(servicio));
+      });
+    });
+  }
+
+
 }
