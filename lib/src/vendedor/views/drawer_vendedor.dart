@@ -1,6 +1,7 @@
 import 'package:evaluacion_1/src/vendedor/views/buscar_servicio.dart';
 import 'package:evaluacion_1/src/vendedor/views/listado_tabs.dart';
 import 'package:evaluacion_1/src/vendedor/views/listar_ventas.dart';
+import 'package:evaluacion_1/src/views/creditos_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -73,6 +74,8 @@ class _VendedorDrawerState extends State<VendedorDrawer> {
             ListTile(
               title: Text('Créditos'),
               leading: Icon(Icons.info),
+              selected: (5 == _selectedItem),
+              onTap: () => onItemSelect(5),
             )
           ],
         ),
@@ -96,6 +99,7 @@ class _VendedorDrawerState extends State<VendedorDrawer> {
       case 2: return BuscarServicio();
       case 3: return TabsListado();
       case 4: return TabsVentas();
+      case 5: return CreditosView();
     }
   }
 
