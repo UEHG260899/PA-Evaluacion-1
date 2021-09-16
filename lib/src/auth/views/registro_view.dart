@@ -196,7 +196,7 @@ class _RegistroViewState extends State<RegistroView> {
     int result = validaciones();
     if (result == 0) {
       try {
-        _auth.createUserWithEmailAndPassword(
+        await _auth.createUserWithEmailAndPassword(
             email: emailController!.text, password: passController!.text);
         if (dropDownRole == 'Vendedor') {
           await _auth.currentUser!.updateDisplayName(userController!.text);
@@ -215,6 +215,7 @@ class _RegistroViewState extends State<RegistroView> {
                 MaterialPageRoute(builder: (context) => VendedorDrawer()));
           });
         } else {
+          await _auth.currentUser!.updateDisplayName(userController!.text);
           _dbRef.child('compradores').push().set({
             'user': userController!.text,
             'email': emailController!.text
