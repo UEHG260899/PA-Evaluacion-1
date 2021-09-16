@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:evaluacion_1/src/comprador/views/screen_servicio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,9 @@ class _ListadoServiciosState extends State<ListadoServicios> {
   StreamSubscription<Event>? changeServicio;
 
   //Instancias de firebase
-  final _dbRef = FirebaseDatabase.instance.reference().child('servicios');
+  final _dbRef = FirebaseDatabase.instance.reference().child('servicios').orderByChild('status').equalTo('activo');
+  final _comprasRef = FirebaseDatabase.instance.reference().child('compras');
+  final _auth = FirebaseAuth.instance;
 
   TextEditingController? busquedaController;
 
@@ -91,7 +94,7 @@ class _ListadoServiciosState extends State<ListadoServicios> {
                             width: 100.0,
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () => _agregarCarro(servicios![position]),
                             icon: Icon(Icons.shopping_cart),
                           ),
                           IconButton(
@@ -174,6 +177,19 @@ class _ListadoServiciosState extends State<ListadoServicios> {
   }
 
   _verServicio(Servicio servicio){
-    Navigator.of(context).push(MaterialPageRoute(builder: (oconstext) => ScreenServicio(servicio)));
+    Navigator.of(context).push(MaterialPageRoute(builder: (constext) => ScreenServicio(servicio)));
+  }
+
+  _agregarCarro(Servicio servicio) async{
+    await _comprasRef.push().set({
+      'servicio' : servicio.toJson(),
+      'correoComprador' : _auth.currentUser!.email,
+      'correoVend' : servicio.correoVend,
+      'statusCompra' : 'pendiente',
+      'statusVenta' : 'pendiente',
+      'fechaProbableEntrega' : 'pendiente'
+    }).then((value) {
+      customSnack('Se agregó al carrito');
+    });
   }
 }
