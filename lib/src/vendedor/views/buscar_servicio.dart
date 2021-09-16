@@ -103,7 +103,8 @@ class _BuscarServicioState extends State<BuscarServicio> {
           )
         ],
       ),
-    ));
+    )
+  );
   }
 
   //Widgets

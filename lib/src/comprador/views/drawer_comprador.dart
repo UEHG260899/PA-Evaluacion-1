@@ -1,8 +1,8 @@
-import 'package:evaluacion_1/src/comprador/views/listado_servicios.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
+import 'package:evaluacion_1/src/comprador/views/listado_servicios.dart';
+import 'package:evaluacion_1/src/comprador/views/tabs_carrito.dart';
 import 'package:evaluacion_1/src/auth/views/login_view.dart';
 
 class DrawerComprador extends StatefulWidget {
@@ -79,7 +79,8 @@ class _DrawerCompradorState extends State<DrawerComprador> {
 
   _getDrawerItem(int pos){
     switch(pos){
-      case 1: return ListadoServicios(); 
+      case 1: return ListadoServicios();
+      case 2: return TabsCompras();
     }
   }
 
