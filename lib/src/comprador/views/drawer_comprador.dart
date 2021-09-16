@@ -1,3 +1,4 @@
+import 'package:evaluacion_1/src/views/creditos_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -60,6 +61,8 @@ class _DrawerCompradorState extends State<DrawerComprador> {
             ListTile(
               title: Text('Créditos'),
               leading: Icon(Icons.info),
+              selected: (3 == _selectedItem),
+              onTap: () => _onItemSelect(3),
             )
           ],
         ),
@@ -81,6 +84,7 @@ class _DrawerCompradorState extends State<DrawerComprador> {
     switch(pos){
       case 1: return ListadoServicios();
       case 2: return TabsCompras();
+      case 3: return CreditosView();
     }
   }
 
