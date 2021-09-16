@@ -1,5 +1,6 @@
 import 'package:evaluacion_1/src/vendedor/views/buscar_servicio.dart';
 import 'package:evaluacion_1/src/vendedor/views/listado_tabs.dart';
+import 'package:evaluacion_1/src/vendedor/views/listar_ventas.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -62,6 +63,12 @@ class _VendedorDrawerState extends State<VendedorDrawer> {
               selected: (3 == _selectedItem),
               onTap: () => onItemSelect(3),
             ),
+            ListTile(
+              title: Text('Estatus de Ventas'),
+              leading: Icon(Icons.shopping_cart),
+              selected: (4 == _selectedItem),
+              onTap: () => onItemSelect(4),
+            ),
             Divider(),
             ListTile(
               title: Text('Créditos'),
@@ -88,6 +95,7 @@ class _VendedorDrawerState extends State<VendedorDrawer> {
       case 1: return CrearServicio();
       case 2: return BuscarServicio();
       case 3: return TabsListado();
+      case 4: return TabsVentas();
     }
   }
 
