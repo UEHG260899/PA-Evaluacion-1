@@ -1,3 +1,4 @@
+import 'package:evaluacion_1/src/vendedor/views/buscar_servicio.dart';
 import 'package:evaluacion_1/src/vendedor/views/listado_tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,6 +53,8 @@ class _VendedorDrawerState extends State<VendedorDrawer> {
             ListTile(
               title: Text('Editar un servicio'),
               leading: Icon(Icons.edit),
+              selected: (2 == _selectedItem),
+              onTap: () => onItemSelect(2),
             ),
             ListTile(
               title: Text('Bajas de Servicios'),
@@ -83,6 +86,7 @@ class _VendedorDrawerState extends State<VendedorDrawer> {
   getDrawerItem(int pos){
     switch(pos){
       case 1: return CrearServicio();
+      case 2: return BuscarServicio();
       case 3: return TabsListado();
     }
   }
