@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:evaluacion_1/src/comprador/views/screen_servicio.dart';
 import 'package:evaluacion_1/src/vendedor/models/Servicio.dart';
 import 'package:evaluacion_1/src/vendedor/views/editar_servicio.dart';
 import 'package:flutter/material.dart';
@@ -92,6 +93,12 @@ class _BuscarServicioState extends State<BuscarServicio> {
                           IconButton(
                             onPressed: () => _editaServicio(servicios![position]),
                             icon: Icon(Icons.edit),
+                          ),
+                          IconButton(
+                            onPressed: (){
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ScreenServicio(servicios![position])));
+                            },
+                            icon: Icon(Icons.remove_red_eye),
                           )
                         ],
                       ),

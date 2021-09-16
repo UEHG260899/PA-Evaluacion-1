@@ -102,7 +102,7 @@ class _ListaCarritoState extends State<ListaCarrito> {
       'fechaProbableEntrega' : compra.fechaProbableEntrega,
       'servicio' : compra.servicio!.toJson(),
       'statusCompra' : 'confirmada',
-      'statusVenta' : compra.statusVenta
+      'statusVenta' : 'pendiente'
     }).then((value){
       setState(() {
         compras!.removeAt(compras!.indexOf(compra));

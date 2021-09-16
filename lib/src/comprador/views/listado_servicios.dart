@@ -186,7 +186,7 @@ class _ListadoServiciosState extends State<ListadoServicios> {
       'correoComprador' : _auth.currentUser!.email,
       'correoVend' : servicio.correoVend,
       'statusCompra' : 'pendiente',
-      'statusVenta' : 'pendiente',
+      'statusVenta' : '',
       'fechaProbableEntrega' : 'pendiente'
     }).then((value) {
       customSnack('Se agregó al carrito');
