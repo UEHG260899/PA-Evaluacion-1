@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:evaluacion_1/src/vendedor/models/Servicio.dart';
+import 'package:evaluacion_1/src/vendedor/views/editar_servicio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -15,6 +16,7 @@ class BuscarServicio extends StatefulWidget {
 class _BuscarServicioState extends State<BuscarServicio> {
   List<Servicio>? servicios;
   StreamSubscription<Event>? addServicio;
+  StreamSubscription<Event>? changeServicio;
 
   //Instancias de Firebase
   final _dbRef = FirebaseDatabase.instance.reference().child('servicios');
@@ -28,6 +30,7 @@ class _BuscarServicioState extends State<BuscarServicio> {
     super.initState();
     servicios = [];
     addServicio = _dbRef.onChildAdded.listen(_addServicio);
+    changeServicio = _dbRef.onChildChanged.listen(_changeServicio);
     busquedaController = new TextEditingController();
   }
 
@@ -88,7 +91,7 @@ class _BuscarServicioState extends State<BuscarServicio> {
                             width: 100.0,
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () => _editaServicio(servicios![position]),
                             icon: Icon(Icons.edit),
                           )
                         ],
@@ -103,6 +106,8 @@ class _BuscarServicioState extends State<BuscarServicio> {
       ),
     ));
   }
+
+  //Widgets
 
   Widget campoBusqueda() {
     return TextField(
@@ -120,6 +125,13 @@ class _BuscarServicioState extends State<BuscarServicio> {
   _addServicio(Event event) {
     setState(() {
       servicios!.add(new Servicio.fromSnapshot(event.snapshot));
+    });
+  }
+
+  _changeServicio(Event event){
+    var oldServicio = servicios?.singleWhere((servicio) => servicio.id == event.snapshot.key);
+    setState(() {
+      servicios![servicios!.indexOf(oldServicio!)] = new Servicio.fromSnapshot(event.snapshot);
     });
   }
 
@@ -163,5 +175,9 @@ class _BuscarServicioState extends State<BuscarServicio> {
       content: Text('$texto'),
     );
     ScaffoldMessenger.of(context).showSnackBar(snack);
+  }
+
+  _editaServicio(Servicio servicio) async{
+    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditarServicio(servicio)));
   }
 }
