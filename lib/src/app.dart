@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hola',
       theme: ThemeData(
-        primaryColor: Colors.yellow
+        primaryColor: Color(0xff01A0C7),
       ),
       debugShowCheckedModeBanner: false,
       home: LoginView()

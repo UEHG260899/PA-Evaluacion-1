@@ -146,13 +146,15 @@ class _LoginViewState extends State<LoginView> {
       customSnack('No puede haber campos vacios');
     } else {
       try {
-        _auth.signInWithEmailAndPassword(
+        await _auth.signInWithEmailAndPassword(
             email: emailController!.text, password: passController!.text);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           customSnack('No se han encontrado registros con esos datos');
         } else if (e.code == 'wrong-password') {
           customSnack('Credenciales invalidas');
+        }else{
+          customSnack('Error desconocido');
         }
       }
     }
