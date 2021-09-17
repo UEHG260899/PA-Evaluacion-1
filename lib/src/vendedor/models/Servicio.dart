@@ -52,16 +52,16 @@ class Servicio {
     status = snapShot.value['status'];
   }
 
-  Servicio.fromObject(key, values){
-    id = key;
-    nombre = values['nombre'];
-    noContacto = values['noContacto'];
-    descripcion = values['descripcion'];
-    latitud = values['latitud'];
-    longitud = values['longitud'];
-    imgUrl = values['imgUrl'];
-    precio = values['precio'];
-    correoVend = values['correoVend'];
-    status = values['status'];
-  }
+  Map<String, dynamic> toJson() => {
+    'id' : id,
+    'nombre' : nombre,
+    'noContacto' : noContacto,
+    'descripcion' : descripcion,
+    'latitud' : latitud,
+    'longitud' : longitud,
+    'imgUrl' : imgUrl,
+    'precio' : precio,
+    'correoVend' : correoVend,
+    'status' : status
+  };
 }
