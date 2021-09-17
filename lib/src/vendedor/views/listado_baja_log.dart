@@ -67,7 +67,7 @@ class _ListadoBajaState extends State<ListadoBaja> {
                       ],
                     ),
                     SizedBox(width: 10.0,),
-                    TextButton(onPressed: () => _borrarServicio(servicios![position], position), child: Text('Eliminar', style: TextStyle(color: Colors.red),)),
+                    TextButton(onPressed: () => _openModal(servicios![position], position), child: Text('Eliminar', style: TextStyle(color: Colors.red),)),
                     TextButton(onPressed: () => _activarServicio(servicios![position]), child: Text('Activar', style: TextStyle(color: Colors.green),)),
                   ],
                 ),
@@ -86,8 +86,46 @@ class _ListadoBajaState extends State<ListadoBaja> {
     });
   }
 
+  _openModal(Servicio servicio, int pos){
+
+    Widget btnAceptar = new TextButton(
+      onPressed: () => _borrarServicio(servicio, pos),
+      child: Text('Aceptar'),
+    );
+
+    Widget btnCancelar = new TextButton(
+      onPressed: () => Navigator.of(context).pop(),
+      child: Text('Cancelar'),
+    );    
+    
+    AlertDialog alerta = new AlertDialog(
+      title: Text('Esta seguro que desea borrar al registro?'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: [
+            Text('Nombre: ${servicio.nombre}'),
+            Text('Precio: \$${servicio.precio}'),
+            Text('Descripción: ${servicio.descripcion}'),
+            Text('No. Contacto ${servicio.noContacto}'),
+          ],
+        ),
+      ),
+      actions: [btnAceptar, btnCancelar],
+    );
+
+    showDialog(
+      context: context, 
+      builder: (BuildContext context) {
+        return alerta;
+      }
+    );
+
+    
+  }
+
   _borrarServicio(Servicio servicio, int pos) async{
     await _dbRef.child(servicio.id!).remove().then((value){
+      Navigator.of(context).pop();
       setState(() {
         servicios!.removeAt(pos);
       });
