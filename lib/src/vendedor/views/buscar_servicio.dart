@@ -45,22 +45,20 @@ class _BuscarServicioState extends State<BuscarServicio> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Column(
+      body: Column(
         children: [
           Row(
             children: [
               Expanded(child: campoBusqueda()),
               Expanded(
-                  child: IconButton(
-                    onPressed: () =>_buscarServicio(busquedaController!.text),
-                    icon: Icon(Icons.search),
-                  ),
+                child: IconButton(
+                  onPressed: () => _buscarServicio(busquedaController!.text),
+                  icon: Icon(Icons.search),
+                ),
               ),
             ],
           ),
-          Container(
-            height: MediaQuery.of(context).size.height,
+          Expanded(
             child: ListView.builder(
               itemCount: servicios!.length,
               padding: const EdgeInsets.only(top: 20.0),
@@ -88,14 +86,16 @@ class _BuscarServicioState extends State<BuscarServicio> {
                               Text('\$${servicios?[position].precio}'),
                             ],
                           ),
-
                           IconButton(
-                            onPressed: () => _editaServicio(servicios![position]),
+                            onPressed: () =>
+                                _editaServicio(servicios![position]),
                             icon: Icon(Icons.edit),
                           ),
                           IconButton(
-                            onPressed: (){
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ScreenServicio(servicios![position])));
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      ScreenServicio(servicios![position])));
                             },
                             icon: Icon(Icons.remove_red_eye),
                           )
@@ -108,9 +108,8 @@ class _BuscarServicioState extends State<BuscarServicio> {
             ),
           )
         ],
-      ),
-    )
-  );
+      ),    
+    );
   }
 
   //Widgets
@@ -134,23 +133,25 @@ class _BuscarServicioState extends State<BuscarServicio> {
     });
   }
 
-  _changeServicio(Event event){
-    var oldServicio = servicios?.singleWhere((servicio) => servicio.id == event.snapshot.key);
+  _changeServicio(Event event) {
+    var oldServicio =
+        servicios?.singleWhere((servicio) => servicio.id == event.snapshot.key);
     setState(() {
-      servicios![servicios!.indexOf(oldServicio!)] = new Servicio.fromSnapshot(event.snapshot);
+      servicios![servicios!.indexOf(oldServicio!)] =
+          new Servicio.fromSnapshot(event.snapshot);
     });
   }
 
-  _buscarServicio(String texto){
-    if(texto.isEmpty){
+  _buscarServicio(String texto) {
+    if (texto.isEmpty) {
       customSnack('Favor de introducir un termino de busqueda');
-    }else{
+    } else {
       _dbRef.get().then((DataSnapshot snapshot) {
         servicios!.clear();
         var llaves = snapshot.value.keys;
         var valores = snapshot.value;
 
-        for(var llave in llaves){
+        for (var llave in llaves) {
           Servicio servicio = new Servicio(
             llave,
             valores[llave]['nombre'],
@@ -164,13 +165,11 @@ class _BuscarServicioState extends State<BuscarServicio> {
             valores[llave]['status'],
           );
 
-          if(servicio.nombre!.contains(texto)){
+          if (servicio.nombre!.contains(texto)) {
             servicios!.add(servicio);
           }
 
-          setState(() {
-            
-          });
+          setState(() {});
         }
       });
     }
@@ -183,7 +182,8 @@ class _BuscarServicioState extends State<BuscarServicio> {
     ScaffoldMessenger.of(context).showSnackBar(snack);
   }
 
-  _editaServicio(Servicio servicio) async{
-    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditarServicio(servicio)));
+  _editaServicio(Servicio servicio) async {
+    await Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => EditarServicio(servicio)));
   }
 }
