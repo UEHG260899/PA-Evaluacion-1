@@ -20,7 +20,11 @@ class _ListadoServiciosState extends State<ListadoServicios> {
   StreamSubscription<Event>? changeServicio;
 
   //Instancias de firebase
-  final _dbRef = FirebaseDatabase.instance.reference().child('servicios').orderByChild('status').equalTo('activo');
+  final _dbRef = FirebaseDatabase.instance
+      .reference()
+      .child('servicios')
+      .orderByChild('status')
+      .equalTo('activo');
   final _comprasRef = FirebaseDatabase.instance.reference().child('compras');
   final _auth = FirebaseAuth.instance;
 
@@ -45,8 +49,7 @@ class _ListadoServiciosState extends State<ListadoServicios> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Column(
+      body: Column(
         children: [
           Row(
             children: [
@@ -59,16 +62,14 @@ class _ListadoServiciosState extends State<ListadoServicios> {
               ),
             ],
           ),
-          Container(
-            height: MediaQuery.of(context).size.height,
+          Expanded(
             child: ListView.builder(
               itemCount: servicios!.length,
               padding: const EdgeInsets.only(top: 20.0),
-              itemBuilder: (context, position){
+              itemBuilder: (context, position) {
                 return Column(
                   children: [
                     Card(
-                      
                       elevation: 10.0,
                       child: Row(
                         children: [
@@ -79,8 +80,7 @@ class _ListadoServiciosState extends State<ListadoServicios> {
                                 image: NetworkImage(
                                     "${servicios![position].imgUrl}"),
                                 placeholder: AssetImage("assets/loading.png"),
-                              )
-                          ),
+                              )),
                           SizedBox(
                             width: 10.0,
                           ),
@@ -91,7 +91,8 @@ class _ListadoServiciosState extends State<ListadoServicios> {
                             ],
                           ),
                           IconButton(
-                            onPressed: () => _agregarCarro(servicios![position]),
+                            onPressed: () =>
+                                _agregarCarro(servicios![position]),
                             icon: Icon(Icons.shopping_cart),
                           ),
                           IconButton(
@@ -108,7 +109,7 @@ class _ListadoServiciosState extends State<ListadoServicios> {
           )
         ],
       ),
-    ));
+    );
   }
 
   //Widgets
@@ -131,16 +132,16 @@ class _ListadoServiciosState extends State<ListadoServicios> {
     });
   }
 
-  _buscarServicio(String texto){
-    if(texto.isEmpty){
+  _buscarServicio(String texto) {
+    if (texto.isEmpty) {
       customSnack('Favor de introducir un termino de busqueda');
-    }else{
+    } else {
       _dbRef.get().then((DataSnapshot snapshot) {
         servicios!.clear();
         var llaves = snapshot.value.keys;
         var valores = snapshot.value;
 
-        for(var llave in llaves){
+        for (var llave in llaves) {
           Servicio servicio = new Servicio(
             llave,
             valores[llave]['nombre'],
@@ -154,13 +155,11 @@ class _ListadoServiciosState extends State<ListadoServicios> {
             valores[llave]['status'],
           );
 
-          if(servicio.nombre!.contains(texto)){
+          if (servicio.nombre!.contains(texto)) {
             servicios!.add(servicio);
           }
 
-          setState(() {
-            
-          });
+          setState(() {});
         }
       });
     }
@@ -173,18 +172,19 @@ class _ListadoServiciosState extends State<ListadoServicios> {
     ScaffoldMessenger.of(context).showSnackBar(snack);
   }
 
-  _verServicio(Servicio servicio){
-    Navigator.of(context).push(MaterialPageRoute(builder: (constext) => ScreenServicio(servicio)));
+  _verServicio(Servicio servicio) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (constext) => ScreenServicio(servicio)));
   }
 
-  _agregarCarro(Servicio servicio) async{
+  _agregarCarro(Servicio servicio) async {
     await _comprasRef.push().set({
-      'servicio' : servicio.toJson(),
-      'correoComprador' : _auth.currentUser!.email,
-      'correoVend' : servicio.correoVend,
-      'statusCompra' : 'pendiente',
-      'statusVenta' : '',
-      'fechaProbableEntrega' : 'pendiente'
+      'servicio': servicio.toJson(),
+      'correoComprador': _auth.currentUser!.email,
+      'correoVend': servicio.correoVend,
+      'statusCompra': 'pendiente',
+      'statusVenta': '',
+      'fechaProbableEntrega': 'pendiente'
     }).then((value) {
       customSnack('Se agregó al carrito');
     });
