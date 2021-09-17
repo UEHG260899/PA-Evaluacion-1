@@ -90,9 +90,6 @@ class _ListadoServiciosState extends State<ListadoServicios> {
                               Text('\$${servicios?[position].precio}'),
                             ],
                           ),
-                          SizedBox(
-                            width: 100.0,
-                          ),
                           IconButton(
                             onPressed: () => _agregarCarro(servicios![position]),
                             icon: Icon(Icons.shopping_cart),

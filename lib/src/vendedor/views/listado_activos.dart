@@ -67,9 +67,8 @@ class _ListadoActivosState extends State<ListadoActivos> {
                          Text('\$${servicios?[position].precio}'),
                        ],
                      ),
-                     SizedBox(width: 10.0,),
                      TextButton(onPressed: () => _openModal(servicios![position], position), child: Text('Eliminar', style: TextStyle(color: Colors.red),),),
-                     TextButton(onPressed: () => _desactivarServicio(servicios![position]), child: Text('Baja lógica', style: TextStyle(color: Colors.orange),)),
+                     TextButton(onPressed: () => _desactivarServicio(servicios![position]), child: Text('Bajalógica', style: TextStyle(color: Colors.orange),)),
                    ],
                  ),
                )
@@ -146,7 +145,6 @@ class _ListadoActivosState extends State<ListadoActivos> {
       'descripcion' : servicio.descripcion,
       'status' : 'inactivo'
     }).then((value){
-      Navigator.of(context).pop();
       setState(() {
         servicios!.removeAt(servicios!.indexOf(servicio));
       });

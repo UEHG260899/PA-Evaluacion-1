@@ -34,6 +34,12 @@ class _ListadoBajaState extends State<ListadoBaja> {
   }
 
   @override
+  void dispose() {
+    addServicio!.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.builder(

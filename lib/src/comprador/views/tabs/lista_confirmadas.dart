@@ -27,6 +27,12 @@ class _ListadoConfirmadasState extends State<ListadoConfirmadas> {
   }
 
   @override
+  void dispose() {
+    addCompra!.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(

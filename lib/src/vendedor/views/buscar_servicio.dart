@@ -39,6 +39,7 @@ class _BuscarServicioState extends State<BuscarServicio> {
     // TODO: implement dispose
     super.dispose();
     addServicio!.cancel();
+    changeServicio!.cancel();
   }
 
   @override
@@ -87,9 +88,7 @@ class _BuscarServicioState extends State<BuscarServicio> {
                               Text('\$${servicios?[position].precio}'),
                             ],
                           ),
-                          SizedBox(
-                            width: 100.0,
-                          ),
+
                           IconButton(
                             onPressed: () => _editaServicio(servicios![position]),
                             icon: Icon(Icons.edit),

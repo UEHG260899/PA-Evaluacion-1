@@ -31,6 +31,13 @@ class _ListaVentasConfState extends State<ListaVentasConf> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    addCompra!.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
