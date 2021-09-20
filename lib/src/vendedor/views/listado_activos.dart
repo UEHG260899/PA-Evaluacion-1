@@ -68,7 +68,7 @@ class _ListadoActivosState extends State<ListadoActivos> {
                        ],
                      ),
                      TextButton(onPressed: () => _openModal(servicios![position], position), child: Text('Eliminar', style: TextStyle(color: Colors.red),),),
-                     TextButton(onPressed: () => _desactivarServicio(servicios![position]), child: Text('Bajalógica', style: TextStyle(color: Colors.orange),)),
+                     TextButton(onPressed: () => _desactivarServicio(servicios![position]), child: Text('Lógica', style: TextStyle(color: Colors.orange),)),
                    ],
                  ),
                )
